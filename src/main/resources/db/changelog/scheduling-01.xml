@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<databaseChangeLog
+	xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd"
+	logicalFilePath="scheduling-01.xml">
+
+	<changeSet id="scheduling-01-initial-table-creations"
+		author="delikan.gokyildiz" dbms="postgresql">
+		<sql splitStatements="false">
+			CREATE SEQUENCE
+			public.bp_compartment_allocation_id_seq
+			INCREMENT 1
+			MINVALUE 1000
+			MAXVALUE 9223372036854775807
+			START 1000
+			CACHE 1;
+		</sql>
+		<sql splitStatements="false">
+			CREATE TABLE public.bp_compartment_allocation
+			(
+			id bigint NOT NULL DEFAULT
+			nextval('bp_compartment_allocation_id_seq'::regclass),
+			order_id bigint,
+			journey_id bigint,
+			weight numeric(22,10),
+			source character varying,
+			destination character varying,
+			fuel_type character varying,
+			CONSTRAINT pk_bp_compartment_allocation PRIMARY KEY (id)
+			)
+		</sql>
+		<sql>
+			CREATE SEQUENCE public.bp_journey_id_seq
+			INCREMENT 1
+			MINVALUE 1000
+			MAXVALUE 9223372036854775807
+			START 1000
+			CACHE 1;
+		</sql>
+		<sql>
+			CREATE TABLE public.bp_journey
+			(
+			id bigint NOT NULL DEFAULT nextval('bp_journey_id_seq'::regclass),
+			allocation_ratio numeric(22,10),
+			arranged boolean,
+			container1 bigint,
+			container2 bigint,
+			contanier3 bigint,
+			contanier4 bigint,
+			CONSTRAINT pk_bp_journey PRIMARY KEY (id)
+			)
+		</sql>
+		
+	    <sql>
+			CREATE SEQUENCE public.bp_journey_line_id_seq
+			INCREMENT 1
+			MINVALUE 1000
+			MAXVALUE 9223372036854775807
+			START 1000
+			CACHE 1;
+		</sql>
+		<sql>
+			CREATE TABLE public.bp_journey_line
+			(
+			id bigint NOT NULL DEFAULT nextval('bp_journey_line_id_seq'::regclass),
+			journey_id bigint,
+			compartment_id bigint,
+			CONSTRAINT pk_bp_journey_line PRIMARY KEY (id)
+			)
+		</sql>
+		
+		
+		<sql>
+			CREATE SEQUENCE public.bp_order_id_seq
+			INCREMENT 1
+			MINVALUE 1000
+			MAXVALUE 9223372036854775807
+			START 1000
+			CACHE 1;
+		</sql>
+		<sql>
+			CREATE TABLE public.bp_order
+			(
+			id bigint NOT NULL DEFAULT nextval('bp_order_id_seq'::regclass),
+			weight numeric(22,10),
+			CONSTRAINT pk_bp_order PRIMARY KEY (id)
+			)
+		</sql>
+		<sql>
+			CREATE SEQUENCE public.bp_order_line_id_seq
+			INCREMENT 1
+			MINVALUE 1000
+			MAXVALUE 9223372036854775807
+			START 1000
+			CACHE 1;
+		</sql>
+		<sql>
+			CREATE TABLE public.bp_order_line
+			(
+			id bigint NOT NULL DEFAULT nextval('bp_order_line_id_seq'::regclass),
+			order_id bigint,
+			weight numeric(22,10),
+			source character varying,
+			destination character varying,
+			CONSTRAINT pk_bp_order_line PRIMARY KEY (id)
+			)
+		</sql>
+
+	</changeSet>
+
+</databaseChangeLog>
